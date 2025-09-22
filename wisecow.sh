@@ -1,76 +1,100 @@
 #!/usr/bin/env bash
 
 SRVPORT=4499
+RSPFILE=response
 
-prerequisites() {
-    command -v cowsay >/dev/null 2>&1 &&
-    command -v fortune >/dev/null 2>&1 &&
-    command -v socat >/dev/null 2>&1 || { 
-        echo "Install prerequisites: cowsay, fortune, and socat."
-        exit 1
-    }
-}
+rm -f $RSPFILE
+mkfifo $RSPFILE
 
-# Function to generate HTTP response
-generate_response() {
-    local fortune_text cow_text html_content
-    
-    fortune_text=$(fortune)
-    cow_text=$(cowsay "$fortune_text")
-    html_content="<pre>$cow_text</pre>"
-    
-    # HTTP response with proper headers
-    cat <<EOF
-HTTP/1.1 200 OK
-Content-Type: text/html
-Content-Length: ${#html_content}
-Connection: close
-
-$html_content
-EOF
+get_api() {
+    read line
+    echo $line
 }
 
 handleRequest() {
-    echo "Starting Wisecow server on port $SRVPORT with socat..."
+    # 1) Process the request
+    get_api
+    mod=$(fortune)
+
+cat <<EOF > $RSPFILE
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DevOps Trainee Role</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fa;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #e53935; /* Changed from blue to red */
+        color: white;
+        padding: 20px;
+        text-align: center;
     
-    
-    # Use socat to create a proper HTTP server
-    while true; do
-        echo "Listening for connections..."
-        socat TCP-LISTEN:$SRVPORT,reuseaddr,fork EXEC:"bash -c 'generate_response'" &
-        SOCAT_PID=$!
-        
-        # Wait for socat to start
-        sleep 1
-        
-        # Check if socat is running
-        if kill -0 $SOCAT_PID 2>/dev/null; then
-            echo "Server started successfully with PID $SOCAT_PID"
-            wait $SOCAT_PID
-        else
-            echo "Failed to start server, retrying..."
-            sleep 2
-        fi
-    done
+    }
+    .fortune {
+        background-color: #ffebee; /* Changed from blue to light red */
+        padding: 15px;
+        font-family: monospace;
+        white-space: pre;
+        border: 1px solid #ffccd5; /* Changed from blue to a soft red */
+        margin: 20px;
+    }
+    .section {
+        margin: 20px;
+        padding: 20px;
+        border-radius: 8px
+        ;
+
+    }
+    h2 {
+        color: #333;
+        left-margin: 100px;
+    }
+
+</style>
+
+</head>
+<body>
+    <header>
+        <h1>AccuKnox Assignment</h1>
+    </header>
+
+    <div class="fortune">
+$(cowsay "$mod")
+    </div>
+        <div class="section">
+        <h2>Submission by Om Harsule</h2>
+    </div>
+</body>
+</html>
+EOF
+}
+
+prerequisites() {
+    command -v cowsay >/dev/null 2>&1 &&
+    command -v fortune >/dev/null 2>&1 ||
+        {
+            echo "Install prerequisites: cowsay, fortune"
+            exit 1
+        }
 }
 
 main() {
     prerequisites
-    
-    # Export the function so socat can use it
-    export -f generate_response
-    
     echo "Wisdom served on port=$SRVPORT..."
-    handleRequest
-}
 
-# Handle cleanup
-cleanup() {
-    echo "Shutting down Wisecow server..."
-    pkill -f "socat.*$SRVPORT" 2>/dev/null
-    exit 0
+    while true; do
+        cat $RSPFILE | nc -l $SRVPORT | handleRequest
+        sleep 0.01
+    done
 }
-
-trap cleanup SIGTERM SIGINT
 
 main
