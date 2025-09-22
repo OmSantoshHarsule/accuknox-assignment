@@ -1,25 +1,22 @@
-FROM ubuntu:22.04
+FROM debian:stable-slim
 
-# Install prerequisites
-RUN apt-get update && \
-    apt-get install -y fortune-mod cowsay netcat-openbsd && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    cowsay \
+    fortune-mod \
+    fortunes-min \
+    netcat-openbsd \
+    socat \
+ && rm -rf /var/lib/apt/lists/*
 
-# Set PATH to include cowsay
+# Add /usr/games to PATH so cowsay & fortune can be found
 ENV PATH="/usr/games:${PATH}"
 
-# Create app directory
 WORKDIR /app
-
-# Copy the wisecow script
 COPY wisecow.sh .
+RUN chmod +x wisecow.sh
 
-# Convert line endings and make script executable
-RUN sed -i 's/\r$//' wisecow.sh && chmod +x wisecow.sh
-
-# Expose port
 EXPOSE 4499
-
-# Run the application
 CMD ["./wisecow.sh"]
+
+
+
