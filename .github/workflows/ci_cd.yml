@@ -73,14 +73,14 @@ jobs:
         IMAGE_URI: ${{ needs.build-and-push.outputs.image-uri }}
       run: |
         # Update deployment.yaml with new image
-        sed -i "s|image: omsantoshharsule/wisecow:latest|image: $IMAGE_URI|g" k8s/3-deployment.yaml
+        sed -i "s|image: omsantoshharsule/wisecow:latest|image: $IMAGE_URI|g" k8s/3-deployment.yml
         
         # Apply all manifests
-        kubectl apply -f k8s/1-namespace.yaml
-        kubectl apply -f k8s/2-cert-issuer.yaml
-        kubectl apply -f k8s/3-deployment.yaml
-        kubectl apply -f k8s/4-service.yaml
-        kubectl apply -f k8s/5-ingress.yaml
+        kubectl apply -f k8s/1-namespace.yml
+        kubectl apply -f k8s/2-cert-issuer.yml
+        kubectl apply -f k8s/3-deployment.yml
+        kubectl apply -f k8s/4-service.yml
+        kubectl apply -f k8s/5-ingress.yml
 
     - name: Wait for deployment
       run: |
