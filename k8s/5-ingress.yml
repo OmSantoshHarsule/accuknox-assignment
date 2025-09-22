@@ -11,10 +11,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - wisecow.local
+    - ae4aa98a1eebc498fb958970541a79cc-563623370.us-east-1.elb.amazonaws.com
     secretName: wisecow-tls
   rules:
-  - host: wisecow.local
+  - host: ae4aa98a1eebc498fb958970541a79cc-563623370.us-east-1.elb.amazonaws.com
     http:
       paths:
       - path: /
