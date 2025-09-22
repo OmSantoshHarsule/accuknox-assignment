@@ -77,7 +77,7 @@ jobs:
         
         # Apply all manifests
         kubectl apply -f k8s/1-namespace.yml
-        kubectl apply -f k8s/2-cert-issuer.yml
+        kubectl apply -f k8s/2-cert.yml
         kubectl apply -f k8s/3-deployment.yml
         kubectl apply -f k8s/4-service.yml
         kubectl apply -f k8s/5-ingress.yml
