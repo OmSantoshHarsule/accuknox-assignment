@@ -1,0 +1,84 @@
+# ========================
+# Wisecow Deployment
+# ========================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wisecow-deployment
+  labels:
+    app: wisecow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wisecow
+  template:
+    metadata:
+      labels:
+        app: wisecow
+    spec:
+      containers:
+      - name: wisecow
+        image: omsantoshharsule/testing:v1
+        ports:
+        - containerPort: 4499
+        imagePullPolicy: IfNotPresent
+        # Health checks
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 4499
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 4499
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+---
+# ========================
+# Wisecow Service
+# ========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: wisecow-service
+spec:
+  type: ClusterIP
+  selector:
+    app: wisecow
+  ports:
+    - protocol: TCP
+      port: 4499
+      targetPort: 4499
+
+---
+# # ========================
+# # Ingress with TLS
+# # ========================
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: wisecow-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+# spec:
+#   ingressClassName: nginx
+#   tls:
+#   - hosts:
+#     - wisecow.local
+#     secretName: wisecow-tls
+#   rules:
+#   - host: wisecow.local
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: wisecow-service
+#             port:
+#               number: 4499
