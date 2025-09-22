@@ -84,7 +84,7 @@ jobs:
         IMAGE_URI: ${{ needs.build-and-push.outputs.image-uri }}
       run: |
         # Update deployment.yaml with new image
-        sed -i "s|image: omsantoshharsule/wisecow:latest|image: $IMAGE_URI|g" k8s/3-deployment.yml
+        sed -i "s|image: omsantoshharsule/testing:v1|image: $IMAGE_URI|g" k8s/3-deployment.yml
         
         # Apply all manifests
         kubectl apply -f k8s/1-namespace.yml
