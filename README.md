@@ -17,6 +17,7 @@ This guide provides step-by-step instructions to deploy the Wisecow application 
 ```
 cd KIND
 kind create cluster --name accuknox_wisecow --config kind-config.yaml
+```
 
 ## Step 2: Install AWS Load Balancer Controller
 
