@@ -30,13 +30,13 @@ log() {
 check() {
     local attempt=1
     while [[ $attempt -le $RETRIES ]]; do
-        [[ $attempt -gt 1 ]] && log "${Y}🔄 Retry $attempt/$RETRIES${NC}" && sleep 2
+        [[ $attempt -gt 1 ]] && log "${Y} Retry $attempt/$RETRIES${NC}" && sleep 2
         
         local result=$(curl -s -o /dev/null -w "%{http_code}|%{time_total}" --max-time $TIMEOUT "$URL" 2>/dev/null)
         local exit_code=$?
         
         if [[ $exit_code -ne 0 ]]; then
-            log "${R}❌ Connection failed (code: $exit_code)${NC}"
+            log "${R} Connection failed (code: $exit_code)${NC}"
         else
             IFS='|' read -r status time <<< "$result"
             case $status in
@@ -53,17 +53,17 @@ check() {
 }
 
 # Main
-log "${B}🚀 Checking: $URL${NC}"
+log "${B} Checking: $URL${NC}"
 
 if [[ $INTERVAL -gt 0 ]]; then
-    log "${B}📊 Monitoring every ${INTERVAL}s (Ctrl+C to stop)${NC}"
+    log "${B} Monitoring every ${INTERVAL}s (Ctrl+C to stop)${NC}"
     success=0; total=0
-    trap 'log "${B}📈 Stats: $success/$total ($(( success*100/total ))% uptime)${NC}"; exit' INT
+    trap 'log "${B} Stats: $success/$total ($(( success*100/total ))% uptime)${NC}"; exit' INT
     
     while true; do
         ((total++))
         check && ((success++))
-        log "${B}⏰ Next check in ${INTERVAL}s${NC}"
+        log "${B} Next check in ${INTERVAL}s${NC}"
         sleep $INTERVAL
     done
 else
