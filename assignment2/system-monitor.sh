@@ -17,7 +17,7 @@ log_message() {
 
 send_alert() {
     echo "$1" | tee -a "$ALERT_FILE"
-    echo "$1" | mail -s "🚨 System Alert on $(hostname)" "$ALERT_EMAIL"
+    echo "$1" | mail -s " System Alert on $(hostname)" "$ALERT_EMAIL"
 }
 
 
