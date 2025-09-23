@@ -1,7 +1,7 @@
 # Wisecow Application - AWS EKS Deployment 
 
-#Link of Video Demonstration of Deployment and Shell Script -
-https://drive.google.com/file/d/1iUKHkht8mlwH0glI1OoDB6DDJdjvzR3s/view?usp=sharing
+#Link of Video Demonstration of Deployment  -
+https://drive.google.com/file/d/1OqdGa2WKOMJtlWzj9IYCLZbgZ6WPv_iW/view?usp=sharing
 
 ## Overview
 This guide provides step-by-step instructions to deploy the Wisecow application on Amazon EKS with HTTPS using Cert-Manager, Self- Assigned and Let's Encrypt certificates, Nginx Controller and AWS Load Balancer.
