@@ -235,3 +235,9 @@ kubectl exec -it deploy/wisecow-deployment -n wisecow -- ls /
 # or try 'cat'
 kubectl exec -it deploy/wisecow-deployment -n wisecow -- cat /etc/hosts
 ```
+
+## KubeArmor Policy Violations
+
+Here’s a screenshot showing the violations:
+
+![KubeArmor Violation](images/Screenshot%20from%202025-09-23%2018-57-03.png)
