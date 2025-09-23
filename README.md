@@ -199,3 +199,39 @@ chmod 777 <shell_script name>
 ## Note
 
 Check the log files in the path which are mentioned in the shell script
+
+
+# KubeArmor Policy
+
+### Install KubeArmor into your cluster
+```bash
+# Add the AccuKnox helm repo
+helm repo add kubearmor https://kubearmor.github.io/charts
+
+# Update repos
+helm repo update
+
+# Install KubeArmor into kube-system namespace
+helm install kubearmor kubearmor/kubearmor -n kube-system --create-namespace
+```
+
+### Apply the namespace postures
+```bash
+kubectl annotate ns wisecow kubearmor-file-posture=block --overwrite
+kubectl annotate ns wisecow kubearmor-network-posture=block --overwrite
+kubectl annotate ns wisecow kubearmor-capabilities-posture=block --overwrite
+```
+
+### Apply the Policy
+```bash
+kubectl apply -f kubearmor.yml
+```
+
+### Test the Policy
+```
+# try running 'ls' (not in your allowed process list)
+kubectl exec -it deploy/wisecow-deployment -n wisecow -- ls /
+
+# or try 'cat'
+kubectl exec -it deploy/wisecow-deployment -n wisecow -- cat /etc/hosts
+```
