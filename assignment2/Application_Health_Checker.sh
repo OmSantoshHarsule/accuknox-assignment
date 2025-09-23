@@ -40,11 +40,11 @@ check() {
         else
             IFS='|' read -r status time <<< "$result"
             case $status in
-                2*) log "${G}✅ UP - HTTP $status (${time}s)${NC}"; return 0 ;;
-                3*) log "${Y}⚠️ REDIRECT - HTTP $status${NC}"; return 0 ;;
-                4*) log "${R}❌ CLIENT ERROR - HTTP $status${NC}" ;;
-                5*) log "${R}❌ SERVER ERROR - HTTP $status${NC}" ;;
-                *) log "${Y}⚠️ UNKNOWN - HTTP $status${NC}" ;;
+                2*) log "${G} UP - HTTP $status (${time}s)${NC}"; return 0 ;;
+                3*) log "${Y} REDIRECT - HTTP $status${NC}"; return 0 ;;
+                4*) log "${R} CLIENT ERROR - HTTP $status${NC}" ;;
+                5*) log "${R} SERVER ERROR - HTTP $status${NC}" ;;
+                *) log "${Y} UNKNOWN - HTTP $status${NC}" ;;
             esac
         fi
         ((attempt++))
